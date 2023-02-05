@@ -1,0 +1,29 @@
+{
+  "mainApi": {
+    "host": "https",
+    "port": "443",
+    "server": "api.unnd.laba.pepeshka.ru",
+    "api": "api/v1"
+  },
+  "searchApi": {
+    "host": "https",
+    "port": "443",
+    "server": "ui.unnd.laba.pepeshka.ru",
+    "api": "",
+    "guiUrlPrefix": "searchd"
+  },
+  "differApi": {
+    "host": "https",
+    "port": "443",
+    "server": "ui.unnd.laba.pepeshka.ru",
+    "api": "",
+    "guiUrlPrefix": "fnpDiffer"
+  },
+  "similarApi": {
+    "host": "https",
+    "port": "443",
+    "server": "ui.unnd.laba.pepeshka.ru",
+    "api": "",
+    "guiUrlPrefix": "searchSame"
+  }
+}
