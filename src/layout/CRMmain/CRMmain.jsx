@@ -1,31 +1,49 @@
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Layout, Menu } from 'antd';
+import { LaptopOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Layout, Menu, Drawer, Breadcrumb } from 'antd';
 import { Link, Routes, Route } from 'react-router-dom';
-import CreateAdt from '../../modules/CreateAdt/CreateAdt';
+import RentAdt from '../../modules/RentAdt/RentAdt';
 import Review from '../../modules/Review/Review';
 import ApiDiContainer from '../../service/apiDiContainer';
 
 import React from 'react';
 import './CRMmain.module.css';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content, Footer } = Layout;
 
 const items = [
   {
-    key: `create`,
+    key: `commercial`,
     icon: <LaptopOutlined />,
-    label: <Link to="create">Создание объявления</Link>,
+    label: 'Коммерческая недвижимость',
+    children: [
+      {
+        key: 'checkInCatalog',
+        label: `Проверка в каталоге`,
+      },
+      {
+        key: 'rentCommercial',
+        label: <Link to="rentCommercial">Аренда коммерческой недвижимости</Link>,
+      },
+      {
+        key: 'sellCommercial',
+        label: `Продажа коммерческой недвижимости`,
+      },
+      {
+        key: 'create3_opt3',
+        label: `Каталог БЦ`,
+      },
+    ],
   },
   {
     key: `create2`,
     icon: <UserOutlined />,
     path: 'orders',
-    label: `Еще меню`,
+    label: `Квартиры`,
   },
   {
     key: `create3`,
     icon: <UserOutlined />,
-    label: `Еще меню с подменю`,
+    label: `Коттеджи`,
     children: [
       {
         key: 'create3_opt1',
@@ -46,6 +64,10 @@ const items = [
 class CRMmain extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      sideMenu: false,
+      path: '',
+    };
     // this.token = {colorBgContainer}
   }
 
@@ -53,65 +75,69 @@ class CRMmain extends React.Component {
     // ApiDiContainer.ProxyApi.getAvailableOffices().then(()=>{})
   }
 
+  openSideMenu = () => {
+    this.setState({ sideMenu: true });
+  };
+
+  closeSideMenu = () => {
+    this.setState({ sideMenu: false });
+  };
+
   render() {
     return (
-      <Layout style={{ minHeight: '100vh', backgroundColor: '#ffffff' }}>
-        <Sider
-          width={300}
+      <Layout>
+        <Header>
+          {/* <div>AR group</div> */}
+          {window.innerWidth < 800 ? (
+            <Button onClick={this.openSideMenu}>
+              <MenuOutlined />
+            </Button>
+          ) : (
+            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items} />
+          )}
+          <Drawer
+            title="Basic Drawer"
+            placement="left"
+            onClose={this.closeSideMenu}
+            open={this.state.sideMenu}
+            width={window.innerWidth}>
+            <Menu style={{ border: 0 }} mode="inline" defaultSelectedKeys={['2']} items={items} />
+          </Drawer>
+        </Header>
+
+        <Content
           style={{
-            // overflow: 'auto',
-            height: '100vh',
-            // position: 'fixed',
-            borderRight: 2,
+            padding: 10,
+            margin: 0,
+            // minHeight: 680,
+            flexGrow: 1,
+            background: '#f1f1f1',
           }}>
-          <Header className="header">
-            <div className="logo" />
-            <Link to="/">
-              <div style={{ color: 'white' }}>Аренда офисов</div>
-            </Link>
-            {/* <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items1} /> */}
-          </Header>
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
+          {/* <Breadcrumb
             style={{
-              height: '100%',
-              borderRight: 0,
-
-              // background: '#f5f5f5',
-            }}
-            items={items}
-          />
-        </Sider>
-        <Layout>
-          <Header className="header">
-            {/* <div className="logo" /> */}
-            <div style={{ color: 'white' }}>((()))</div>
-            {/* <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items1} /> */}
-          </Header>
-
-          <Content
-            style={{
-              padding: 24,
-              margin: 0,
-              // minHeight: 680,
-              flexGrow: 1,
-              background: '#ffffff',
+              margin: '16px 0',
             }}>
-            {/* Тут какая-то важная инфа, может быть собирать стату по объявлениям и выводить сюда */}
-            <Routes>
-              <Route path={'/'} element={<Review />} />
-              <Route path={'/create'} element={<CreateAdt />} />
-              {/* <Route
-                  path={this.props.match.path + 'tasks'}
-                  render={(props) => (
-                    <MyTasks
-                    />
-                  )} */}
-            </Routes>
-          </Content>
-        </Layout>
+            <Breadcrumb.Item>Home</Breadcrumb.Item>
+            <Breadcrumb.Item>List</Breadcrumb.Item>
+            <Breadcrumb.Item>App</Breadcrumb.Item>
+          </Breadcrumb> */}
+          <Routes>
+            <Route path={'/'} element={<Review />} />
+            <Route path={'/rentCommercial'} element={<RentAdt />} />
+            {/* <Route
+                   path={this.props.match.path + 'tasks'}
+                   render={(props) => (
+                     <MyTasks
+                     />
+                   )} */}
+          </Routes>
+        </Content>
+        {/* <Footer
+          style={{
+            textAlign: 'center',
+          }}>
+          Ant Design ©2023 Created by Ant UED
+        </Footer> */}
       </Layout>
     );
   }

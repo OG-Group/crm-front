@@ -113,8 +113,8 @@ class App extends Component {
     ];
     return (
       <>
-        {/* {!this.state.logged && false ? ( */}
-        {!this.state.logged ? (
+        {/* {!this.state.logged ? ( */}
+        {!this.state.logged && false ? (
           <div
             style={{
               backgroundColor: '#f0f0f0',
