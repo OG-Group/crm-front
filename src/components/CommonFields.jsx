@@ -1,6 +1,7 @@
 import { Component } from 'react';
-import { Card, Space, Row, Col, Typography, Divider } from 'antd';
+import { Card, Space, Row, Col, Typography, Divider, Button } from 'antd';
 import { YMaps, Map, Placemark, FullscreenControl, SearchControl } from '@pbe/react-yandex-maps';
+import { PlusOutlined } from '@ant-design/icons';
 
 import Input_ from './Input';
 import Radio_ from './Radio';
@@ -18,6 +19,8 @@ class CommonFields extends Component {
     this.xl = { span: 12 };
 
     this.state = {
+      photoCounter: 0,
+
       mainPropertyType: '',
       mainDescription: '',
       mainGuestsCount: 0,
@@ -41,18 +44,19 @@ class CommonFields extends Component {
       mainSubagentLastName: '',
       mainSubagentAvatar: '',
       mainLayoutphotoUrl: '',
-      mainLayoutphotoIsDefault: true,
+      mainLayoutphotoIsDefault: false,
       mainLayoutphotoPhotoType: '',
+      mainPhotoSchema: [],
       mainPhotosFullurl: '',
-      mainPhotosIsDefault: true,
+      mainPhotosIsDefault: false,
       mainPhotosType: '',
       mainVideosUrl: '',
       mainPremiumTitle: '',
-      mainIsRentByParts: true,
+      mainIsRentByParts: false,
       mainRentByPartsDesc: '',
       mainPublishTermsServices: '',
       mainPublishTermsExcludedservices: '',
-      mainPublishTermsIgnore: true,
+      mainPublishTermsIgnore: false,
       mainExtraDataHomeOwnerName: '',
       mainExtraDataHomeOwnerPhone: '',
       mainExtraDataExacAddres: '',
@@ -62,8 +66,8 @@ class CommonFields extends Component {
 
   render() {
     return (
-      <Row gutter={[16, 16]}>
-        <Col className="gutter-row" xs={this.xs} sm={this.sm} md={this.md} lg={this.lg} xl={24}>
+      <Row gutter={[16, 16]} align="stretch">
+        <Col xs={this.xs} sm={this.sm} md={this.md} lg={this.lg} xl={24}>
           <Card className="mapCard" style={{ margin: 0, borderRadius: 0 }}>
             <Space direction="vertical" style={{ width: '100%' }}>
               <Input_ title="Адрес или название бизнес-центра" />
@@ -119,6 +123,7 @@ class CommonFields extends Component {
               <Input_
                 title="Количество гостей"
                 InputNumber
+                numberType="Int64"
                 onChange={(mainGuestsCount) => this.setState({ mainGuestsCount })}
                 value={this.state.mainGuestsCount}
               />
@@ -133,12 +138,14 @@ class CommonFields extends Component {
               <Input_
                 title="Широта"
                 InputNumber
+                numberType="Double"
                 onChange={(mainCoordinatesLat) => this.setState({ mainCoordinatesLat })}
                 value={this.state.mainCoordinatesLat}
               />
               <Input_
                 title="Долгота"
                 InputNumber
+                numberType="Double"
                 onChange={(mainCoordinatesLng) => this.setState({ mainCoordinatesLng })}
                 value={this.state.mainCoordinatesLng}
               />
@@ -146,7 +153,6 @@ class CommonFields extends Component {
 
               <Input_
                 title="Кадастровый номер"
-                InputNumber
                 onChange={(mainCadastralNumber) => this.setState({ mainCadastralNumber })}
                 value={this.state.mainCadastralNumber}
               />
@@ -266,32 +272,98 @@ class CommonFields extends Component {
 
               <Divider plain>Фотографии объекта</Divider>
 
-              <Input_
-                title="URL исходного изображения"
-                onChange={(mainPhotosFullurl) => this.setState({ mainPhotosFullurl })}
-                value={this.state.mainPhotosFullurl}
-              />
-              <Radio_
-                title="Является ли фото по-умолчанию"
-                options={[
-                  { value: true, label: 'Да' },
-                  { value: false, label: 'Нет' },
-                ]}
-                onChange={(mainPhotosIsDefault) => this.setState({ mainPhotosIsDefault })}
-                value={this.state.mainPhotosIsDefault}
-              />
-              <Select_
-                onChange={(mainPhotosType) => {
-                  this.setState({ mainPhotosType });
-                }}
-                value={this.state.mainPhotosIsDefault}
-                options={[
-                  { value: 'realtyObject', label: 'Объект недвижимости' },
-                  { value: 'realtyObjectLayout', label: 'Планировка объекта' },
-                  { value: 'realtyFloorLayout', label: 'План этажа на котором находится объект' },
-                ]}
-                title="Тип фото"
-              />
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => {
+                  this.setState({
+                    mainPhotoSchema: [
+                      ...this.state.mainPhotoSchema,
+                      {
+                        mainPhotosFullurl: '',
+                        mainPhotosIsDefault: false,
+                        mainPhotosType: '',
+                      },
+                    ],
+                  });
+                }}>
+                Добавить фото
+              </Button>
+
+              {this.state.mainPhotoSchema.map((el, key) => {
+                return (
+                  <>
+                    <Input_
+                      title="URL исходного изображения"
+                      onChange={(mainPhotosFullurl) => {
+                        const newMainPhotoSchema = this.state.mainPhotoSchema.map((el, j) => {
+                          if (j === key) {
+                            return { ...this.state.mainPhotoSchema[key], mainPhotosFullurl };
+                          }
+                          return el;
+                        });
+                        this.setState({
+                          mainPhotoSchema: newMainPhotoSchema,
+                        });
+                      }}
+                      value={this.state.mainPhotoSchema[key].mainPhotosFullurl}
+                    />
+                    <Radio_
+                      title="Является ли фото по-умолчанию"
+                      options={[
+                        { value: true, label: 'Да' },
+                        { value: false, label: 'Нет' },
+                      ]}
+                      onChange={(mainPhotosIsDefault) => {
+                        const newMainPhotoSchema = this.state.mainPhotoSchema.map((el, j) => {
+                          if (j === key) {
+                            return { ...this.state.mainPhotoSchema[key], mainPhotosIsDefault };
+                          }
+                          return el;
+                        });
+                        this.setState({
+                          mainPhotoSchema: newMainPhotoSchema,
+                        });
+                      }}
+                      value={this.state.mainPhotoSchema[key].mainPhotosIsDefault}
+                    />
+
+                    <Select_
+                      onChange={(mainPhotosType) => {
+                        const newMainPhotoSchema = this.state.mainPhotoSchema.map((el, j) => {
+                          if (j === key) {
+                            return { ...this.state.mainPhotoSchema[key], mainPhotosType };
+                          }
+                          return el;
+                        });
+                        this.setState({
+                          mainPhotoSchema: newMainPhotoSchema,
+                        });
+                      }}
+                      value={this.state.mainPhotoSchema[key].mainPhotosType}
+                      options={[
+                        { value: 'realtyObject', label: 'Объект недвижимости' },
+                        { value: 'realtyObjectLayout', label: 'Планировка объекта' },
+                        {
+                          value: 'realtyFloorLayout',
+                          label: 'План этажа на котором находится объект',
+                        },
+                      ]}
+                      title="Тип фото"
+                    />
+                    <Button
+                      danger
+                      onClick={() => {
+                        this.setState({
+                          mainPhotoSchema: this.state.mainPhotoSchema.filter((el, j) => j !== key),
+                        });
+                      }}>
+                      Удалить фото
+                    </Button>
+                    <Divider plain></Divider>
+                  </>
+                );
+              })}
 
               <Divider plain>Видео объекта</Divider>
 
@@ -396,6 +468,7 @@ class CommonFields extends Component {
               <Input_
                 title="Ставка на объявление в аукционе"
                 InputNumber
+                numberType="Double"
                 onChange={(mainAuctionBet) => this.setState({ mainAuctionBet })}
                 value={this.state.mainAuctionBet}
               />

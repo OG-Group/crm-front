@@ -22,13 +22,20 @@ class Input_ extends Component {
             />
           ) : this.props.InputNumber ? (
             <InputNumber
-              defaultValue="1"
-              min="0"
-              max="100"
-              step="0.0001"
+              defaultValue={this.props.value}
+              min={0}
+              max={
+                this.props.numberType === 'Int32'
+                  ? 10000
+                  : this.props.numberType === 'Int64'
+                  ? 10000
+                  : this.props.numberType === 'Double'
+                  ? 10000.0
+                  : 10000
+              }
               value={this.props.value}
-              onChange={(e) => this.props.onChange(e.target.value)}
-              stringMode
+              onChange={(value) => this.props.onChange(value)}
+              stringMode={this.props.numberType === 'Double' ? true : false}
             />
           ) : (
             <Input onChange={(e) => this.props.onChange(e.target.value)} value={this.props.value} />

@@ -1,7 +1,10 @@
 import { LaptopOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Layout, Menu, Drawer, Breadcrumb } from 'antd';
 import { Link, Routes, Route } from 'react-router-dom';
-import RentAdt from '../../modules/RentAdt/RentAdt';
+
+import SaleCommercial from '../../modules/Commercial/SaleCommercial';
+import RentCommercial from '../../modules/Commercial/RentCommercial';
+
 import Review from '../../modules/Review/Review';
 import ApiDiContainer from '../../service/apiDiContainer';
 
@@ -26,7 +29,7 @@ const items = [
       },
       {
         key: 'sellCommercial',
-        label: `Продажа коммерческой недвижимости`,
+        label: <Link to="saleCommercial">Продажа коммерческой недвижимости</Link>,
       },
       {
         key: 'create3_opt3',
@@ -86,7 +89,7 @@ class CRMmain extends React.Component {
   render() {
     return (
       <Layout>
-        <Header>
+        <Header onBreakpoint={() => alert()}>
           {/* <div>AR group</div> */}
           {window.innerWidth < 800 ? (
             <Button onClick={this.openSideMenu}>
@@ -123,7 +126,8 @@ class CRMmain extends React.Component {
           </Breadcrumb> */}
           <Routes>
             <Route path={'/'} element={<Review />} />
-            <Route path={'/rentCommercial'} element={<RentAdt />} />
+            <Route path={'/rentCommercial'} element={<RentCommercial link={'rentCommercial'} />} />
+            <Route path={'/saleCommercial'} element={<SaleCommercial link={'saleCommercial'} />} />
             {/* <Route
                    path={this.props.match.path + 'tasks'}
                    render={(props) => (
